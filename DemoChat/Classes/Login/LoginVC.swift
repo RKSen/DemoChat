@@ -12,22 +12,30 @@ import SocketIO
 class LoginVC: ParentVC, UITextFieldDelegate {
     @IBOutlet weak var txtUsername: UITextField!
     @IBOutlet weak var btnBeginChat: UIButton!
+    var textFieldGlobal:UITextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        txtUsername.delegate = self
+        textFieldGlobal = txtUsername
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LoginVC.dismissKeyoard))
+        self.view.addGestureRecognizer(tapGesture)
         
-        constant.sh.socket.on("connect") {data, ack in
-            print("socket connected")
-            constant.sh.socket.emit("login", ["name" : self.txtUsername.text])
-        }
+
+    
+    }
+    override func viewWillAppear(_ animated: Bool) {
+                constant.sh.socket.connect()
+                constant.sh.socket.on("connect") {data, ack in
+                    print("socket connected")
         
-        constant.sh.socket.on("logged in") { (data, ack) in
-            
-            constant.sh.socket.off("logged in")
-            constant.sh.allUsers = (data[0] as! [String]).filter{$0 != self.txtUsername.text}
-            print(constant.sh.allUsers)
-            self.performSegue(withIdentifier: "login_segue", sender: self)
-        }
+                }
+                constant.sh.socket.on("logged in") { (data, ack) in
+                    constant.sh.socket.off("logged in")
+                    constant.sh.allUsers = (data[0] as! [String]).filter{$0 != self.txtUsername.text}
+                    print(constant.sh.allUsers)
+                    self.performSegue(withIdentifier: "login_segue", sender: self)
+                }
 
     }
 
@@ -36,6 +44,18 @@ class LoginVC: ParentVC, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+        textFieldGlobal.resignFirstResponder()
+    
+    }
+   
+    func dismissKeyoard(){
+        textFieldGlobal.resignFirstResponder()
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination
         vc.navigationItem.title = txtUsername.text?.trimmingCharacters(in: CharacterSet.whitespaces)
@@ -47,13 +67,15 @@ class LoginVC: ParentVC, UITextFieldDelegate {
     }
 
     @IBAction func btnBeginChatClicked(_ sender: Any) {
-        constant.sh.socket.connect()
+        constant.sh.socket.emit("login", ["name" : self.txtUsername.text])
     }
     
     // Mark: textfield delegate methods
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         btnBeginChat.sendActions(for: .touchUpInside)
-        return true
+        textField.resignFirstResponder()
+
+        return false
     }
 }
 

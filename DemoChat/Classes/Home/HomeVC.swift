@@ -10,10 +10,12 @@ import UIKit
 
 class SendMessageCell: UICollectionViewCell {
     @IBOutlet weak var lblMessage: UILabel!
+    @IBOutlet weak var lblDate: UILabel!
 }
 
 class ReceivedMessageCell: UICollectionViewCell {
     @IBOutlet weak var lblMessage: UILabel!
+    @IBOutlet weak var lblDate: UILabel!
 }
 
 
@@ -33,11 +35,17 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        scrollview.contentSize = CGSize(width: scrollview.frame.size.width, height: 3000.0)
+        scrollview.contentSize = CGSize(width: scrollview.frame.size.width, height: scrollview.contentSize.height)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(HomeVC.keyboardDidShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(HomeVC.keyboardWillBeHidden), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(HomeVC.dismissKeyoard))
+        self.view.addGestureRecognizer(tapGesture)
+        
+        activeField = txtMessage
+        
         constant.sh.socket.on("message") { (data, ack) in
             if let mb = data[0] as? Dictionary<String, AnyObject> {
                 self.messages.append(mb)
@@ -51,7 +59,25 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
         }
 
     }
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        return true
+    }
+  
     
+    func textViewShouldReturn(_ textView: UITextField) -> Bool {
+        textView.resignFirstResponder()
+        return true
+    }
+
+    func dismissKeyoard(){
+        activeField?.resignFirstResponder()
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+//        constant.sh.socket.disconnect()
+        constant.sh.socket.emit("logout", ["name" : self.navigationItem.title!]);
+    }
     
     
     override func didReceiveMemoryWarning() {
@@ -71,14 +97,21 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cellDictionary:[String:AnyObject] = (messages[indexPath.row])
-        
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy HH:mm a"
+        let result = formatter.string(from: date)
         if self.navigationItem.title?.caseInsensitiveCompare(cellDictionary["sourceUser"]! as! String) == .orderedSame  {
             let cell:ReceivedMessageCell = collectionView.dequeueReusableCell(withReuseIdentifier: "chat_receive", for: indexPath) as! ReceivedMessageCell
             cell.lblMessage.text = cellDictionary["messageBody"]! as? String
+            
+            cell.lblDate.text = result as String
             return cell
         }
+        
         let cell:SendMessageCell = collectionView.dequeueReusableCell(withReuseIdentifier: "chat_send", for: indexPath) as! SendMessageCell
         cell.lblMessage.text = cellDictionary["messageBody"]! as? String
+        cell.lblDate.text = result as String
         return cell
     }
     
@@ -112,7 +145,8 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
     
     
     func keyboardDidShow(notification: NSNotification) {
-        if let activeField = self.activeField, let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if let activeField = self.activeField,
+            let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
             self.scrollview.contentInset = contentInsets
             self.scrollview.scrollIndicatorInsets = contentInsets
@@ -146,7 +180,7 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
         txtMessage.resignFirstResponder()
         
         let myString = txtMessage.text!
-        let regex = try! NSRegularExpression(pattern: "([^\\d]|^)\\+\\d{4,10}([^\\d]|$)",
+        let regex = try! NSRegularExpression(pattern: "(https?):[-A-Z0-9+&@#/%?=~_|!:,.;] [^\\d]|^)\\+\\d{4,10}([^\\d]|$)",
                                              options: NSRegularExpression.Options.caseInsensitive)
         let range = NSMakeRange(0, myString.characters.count)
         let modString = regex.stringByReplacingMatches(in: myString,
@@ -154,6 +188,14 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
                                                        range: range,
                                                        withTemplate: "*******")
         print("-----",modString)
+        let sentence = modString
+        let words = sentence.components(separatedBy: "")
+        for word in words {
+            if word.hasPrefix("http://") || word.hasPrefix("https://") {
+                    print("This is a url '\(word.replacingOccurrences(of: "http://", with: "****"))'")
+                
+            }
+        }
         constant.sh.socket.emit("message", ["messageBody" : modString, "sourceUser": "\(self.navigationItem.title!)", "destinationUser" : constant.sh.allUsers])
     }
 }

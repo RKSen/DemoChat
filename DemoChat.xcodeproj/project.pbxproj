@@ -21,6 +21,8 @@
 		8BB39E031E08C50200A78AD5 /* ParentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB39E021E08C50200A78AD5 /* ParentVC.swift */; };
 		D646907F32EFF70EE354E696 /* Pods_DemoChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2F870EC0405661F23D642E8 /* Pods_DemoChat.framework */; };
 		F30DFD3479B2F350667D4A6B /* Pods_DemoChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C5472B89BF267D2D5FACEF /* Pods_DemoChatTests.framework */; };
+		F4E269C71E107CEA00FC2724 /* RoundCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E269C61E107CEA00FC2724 /* RoundCornerButton.swift */; };
+		F4E269C91E10806800FC2724 /* RoundCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E269C81E10806800FC2724 /* RoundCornerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +68,8 @@
 		91C18ECD6F9D63084DFA76C5 /* Pods_DemoChatUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DemoChatUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2F870EC0405661F23D642E8 /* Pods_DemoChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DemoChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAAC186B6AAC966590AE6D09 /* Pods-DemoChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoChatTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoChatTests/Pods-DemoChatTests.release.xcconfig"; sourceTree = "<group>"; };
+		F4E269C61E107CEA00FC2724 /* RoundCornerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCornerButton.swift; sourceTree = "<group>"; };
+		F4E269C81E10806800FC2724 /* RoundCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCornerView.swift; sourceTree = "<group>"; };
 		FF526CB4CA798735CF6B3A7B /* Pods-DemoChatUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoChatUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoChatUITests/Pods-DemoChatUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -220,6 +224,8 @@
 		8BB39E011E08C4EB00A78AD5 /* Parent */ = {
 			isa = PBXGroup;
 			children = (
+				F4E269C61E107CEA00FC2724 /* RoundCornerButton.swift */,
+				F4E269C81E10806800FC2724 /* RoundCornerView.swift */,
 				8BB39E021E08C50200A78AD5 /* ParentVC.swift */,
 			);
 			path = Parent;
@@ -507,9 +513,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4E269C71E107CEA00FC2724 /* RoundCornerButton.swift in Sources */,
 				8BB39DFD1E08C3AC00A78AD5 /* AppDelegate.swift in Sources */,
 				8B51FFDC1E09DB2B0041F4DC /* constant.swift in Sources */,
 				8BB39DFE1E08C3AC00A78AD5 /* HomeVC.swift in Sources */,
+				F4E269C91E10806800FC2724 /* RoundCornerView.swift in Sources */,
 				8BB39E031E08C50200A78AD5 /* ParentVC.swift in Sources */,
 				8BB39DFF1E08C3AC00A78AD5 /* LoginVC.swift in Sources */,
 				8BB39DCE1E08C33200A78AD5 /* DemoChat.xcdatamodeld in Sources */,
