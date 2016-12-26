@@ -23,6 +23,7 @@
 		F30DFD3479B2F350667D4A6B /* Pods_DemoChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C5472B89BF267D2D5FACEF /* Pods_DemoChatTests.framework */; };
 		F4E269C71E107CEA00FC2724 /* RoundCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E269C61E107CEA00FC2724 /* RoundCornerButton.swift */; };
 		F4E269C91E10806800FC2724 /* RoundCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E269C81E10806800FC2724 /* RoundCornerView.swift */; };
+		F4E269CC1E10A53000FC2724 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E269CB1E10A53000FC2724 /* Utility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 		CAAC186B6AAC966590AE6D09 /* Pods-DemoChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoChatTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoChatTests/Pods-DemoChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		F4E269C61E107CEA00FC2724 /* RoundCornerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCornerButton.swift; sourceTree = "<group>"; };
 		F4E269C81E10806800FC2724 /* RoundCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCornerView.swift; sourceTree = "<group>"; };
+		F4E269CB1E10A53000FC2724 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		FF526CB4CA798735CF6B3A7B /* Pods-DemoChatUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoChatUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoChatUITests/Pods-DemoChatUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -179,6 +181,7 @@
 		8BB39DF61E08C3AC00A78AD5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F4E269CA1E10A51800FC2724 /* Utility */,
 				8BB39E011E08C4EB00A78AD5 /* Parent */,
 				8BB39DF71E08C3AC00A78AD5 /* AppDelegate */,
 				8BB39DF91E08C3AC00A78AD5 /* Home */,
@@ -229,6 +232,14 @@
 				8BB39E021E08C50200A78AD5 /* ParentVC.swift */,
 			);
 			path = Parent;
+			sourceTree = "<group>";
+		};
+		F4E269CA1E10A51800FC2724 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				F4E269CB1E10A53000FC2724 /* Utility.swift */,
+			);
+			name = Utility;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -515,6 +526,7 @@
 			files = (
 				F4E269C71E107CEA00FC2724 /* RoundCornerButton.swift in Sources */,
 				8BB39DFD1E08C3AC00A78AD5 /* AppDelegate.swift in Sources */,
+				F4E269CC1E10A53000FC2724 /* Utility.swift in Sources */,
 				8B51FFDC1E09DB2B0041F4DC /* constant.swift in Sources */,
 				8BB39DFE1E08C3AC00A78AD5 /* HomeVC.swift in Sources */,
 				F4E269C91E10806800FC2724 /* RoundCornerView.swift in Sources */,

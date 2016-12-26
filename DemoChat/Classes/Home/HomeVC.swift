@@ -19,7 +19,7 @@ class ReceivedMessageCell: UICollectionViewCell {
 }
 
 
-class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextViewDelegate {
+class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextViewDelegate,UIScrollViewDelegate {
     
     weak var activeField: UITextView?
     @IBOutlet weak var scrollview: UIScrollView!
@@ -35,8 +35,8 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        scrollview.contentSize = CGSize(width: scrollview.frame.size.width, height: scrollview.contentSize.height)
-        
+        scrollview.contentSize = CGSize(width: scrollview.frame.size.width, height: scrollview.contentSize.height + 500)
+        scrollview.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(HomeVC.keyboardDidShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(HomeVC.keyboardWillBeHidden), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -60,13 +60,14 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
 
     }
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        textView.resignFirstResponder()
         return true
     }
   
     
     func textViewShouldReturn(_ textView: UITextField) -> Bool {
         textView.resignFirstResponder()
-        return true
+        return false
     }
 
     func dismissKeyoard(){
@@ -136,13 +137,33 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
     
     func textViewDidEndEditing(_ textView: UITextView) {
         self.activeField = nil
+        textView.resignFirstResponder()
+
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         self.activeField = textView
+        self.activeField?.inputAccessoryView = addDoneButton()
+
     }
     
+    func addDoneButton() -> UIToolbar {
+        let toolbar = UIToolbar(frame:CGRect(x: 0, y: 0, width: 320, height: 50))
+        
+//        let next = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(HomeVC.nextTextfield))
+        
+        let flexButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(HomeVC.donePressed))
+        
+        toolbar.setItems([flexButton, doneButton], animated: true)
+        toolbar.sizeToFit()
+        return toolbar
+    }
     
+    func donePressed(){
+        activeField?.resignFirstResponder()
+    }
+
     
     func keyboardDidShow(notification: NSNotification) {
         if let activeField = self.activeField,
@@ -180,8 +201,9 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
         txtMessage.resignFirstResponder()
         
         let myString = txtMessage.text!
-        let regex = try! NSRegularExpression(pattern: "(https?):[-A-Z0-9+&@#/%?=~_|!:,.;] [^\\d]|^)\\+\\d{4,10}([^\\d]|$)",
+        let regex = try! NSRegularExpression(pattern: "([^\\d]|^)\\+\\d{4,10}([^\\d]|$)",
                                              options: NSRegularExpression.Options.caseInsensitive)
+        
         let range = NSMakeRange(0, myString.characters.count)
         let modString = regex.stringByReplacingMatches(in: myString,
                                                        options: [],
@@ -194,9 +216,11 @@ class HomeVC: ParentVC, UICollectionViewDelegate, UICollectionViewDataSource, UI
             if word.hasPrefix("http://") || word.hasPrefix("https://") {
                     print("This is a url '\(word.replacingOccurrences(of: "http://", with: "****"))'")
                 
+                
             }
         }
         constant.sh.socket.emit("message", ["messageBody" : modString, "sourceUser": "\(self.navigationItem.title!)", "destinationUser" : constant.sh.allUsers])
+        txtMessage.text = ""
     }
 }
 

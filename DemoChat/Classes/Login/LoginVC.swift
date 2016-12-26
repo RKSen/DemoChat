@@ -67,7 +67,13 @@ class LoginVC: ParentVC, UITextFieldDelegate {
     }
 
     @IBAction func btnBeginChatClicked(_ sender: Any) {
+        if (txtUsername.text!.isEmpty == true) {
+            print("dddd")
+            Utility.sharedInstance.showAlert(title: "Login",msg: "Please enter User Name", viewCtrl: self)
+        }else{
         constant.sh.socket.emit("login", ["name" : self.txtUsername.text])
+        }
+        
     }
     
     // Mark: textfield delegate methods
